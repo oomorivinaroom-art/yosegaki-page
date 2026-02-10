@@ -19,7 +19,7 @@
                    "Noto Sans JP", sans-serif;
       color: #001E43;
       overflow-x: hidden;
-      background-color: #C0FFEE;
+      background-color: #C0FFEE; /* ベースカラー */
     }
 
     /* =========================
@@ -30,6 +30,7 @@
       top: 0;
       left: 0;
       z-index: -1;
+      filter: blur(1.5px); /* ガウスぼかし */
     }
 
     /* =========================
@@ -180,23 +181,24 @@
     });
 
     /* =========================
-       背景ドット（ランダム降下）
+       背景ドット（ランダム降下・指定色）
     ========================= */
     const canvas = document.getElementById('bgDots');
     const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
+    const colors = ["#FFE9D4", "#FFD4F0", "#D4FDFF"];
     const dots = [];
-    const dotCount = 80; // ドットの数
+    const dotCount = 80;
 
     for(let i = 0; i < dotCount; i++){
       dots.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: 5 + Math.random() * 15,   // ランダムな大きさ
-        speed: 0.2 + Math.random() * 1,   // 落下速度
-        color: `rgba(${200 + Math.random()*55}, ${200 + Math.random()*55}, 255, 0.7)`
+        radius: 5 + Math.random() * 15,
+        speed: 0.2 + Math.random() * 1,
+        color: colors[Math.floor(Math.random() * colors.length)]
       });
     }
 
@@ -204,12 +206,12 @@
       ctx.clearRect(0, 0, width, height);
       dots.forEach(dot => {
         dot.y += dot.speed;
-        if(dot.y - dot.radius > height) {
+        if(dot.y - dot.radius > height){
           dot.y = -dot.radius;
           dot.x = Math.random() * width;
         }
         ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI*2);
         ctx.fillStyle = dot.color;
         ctx.fill();
       });

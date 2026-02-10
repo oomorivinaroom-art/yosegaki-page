@@ -23,8 +23,6 @@
 
     /* =========================
        背景（春っぽいドット）
-       ・固定背景
-       ・ゆっくり下に流れる
     ========================= */
     body::before {
       content: "";
@@ -34,7 +32,6 @@
 
       background-color: #C0FFEE;
 
-      /* ドットは小さめ・量少なめ・輪郭ぼかし */
       background-image:
         radial-gradient(circle at 40% 30%, rgba(255,233,212,0.7) 0 6px, transparent 7px),
         radial-gradient(circle at 70% 30%, rgba(255,212,240,0.7) 0 6px, transparent 7px),
@@ -68,56 +65,49 @@
       font-family: "游教科書体", "YuKyokasho", serif;
       font-size: clamp(22px, 5vw, 32px);
       margin-bottom: 32px;
-      position: relative;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
     }
 
-    /* 装飾用の特殊文字 */
     h1 span {
-      color: #FF9A4D; /* オレンジ系 */
-      margin: 0 6px;
+      color: #FF9A3C; /* オレンジ系装飾 */
+      margin: 0 0.2em;
     }
 
     /* =========================
-       メッセージカード（外側）
-       ・中央揃え
-       ・背景・角丸・ぼかし
+       メッセージカード
     ========================= */
     .message {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .message-inner {
       width: 100%;
       max-width: 520px;
-      margin: 0 auto 24px;
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 16px;
 
-      background: rgba(255, 255, 255, 0.6);
-      border-radius: 18px;
-      backdrop-filter: blur(6px);
+      transition: transform 0.35s
+        cubic-bezier(0.22, 1.6, 0.36, 1); /* 微バウンス */
+      will-change: transform;
     }
 
-    /* =========================
-       メッセージ中身（動く部分）
-       ・ここがモニュっと動
-    ========================= */
-    ..message-inner p:first-child {
-  margin-top: 0.8em;
-}
+    /* 1行目だけ上に余白を足す */
+    .message-inner p:first-child {
+      margin-top: 0.8em;
+    }
 
-.message-inner {
-  padding: 18px 20px;
-  transition: transform 0.35s
-    cubic-bezier(0.22, 1.6, 0.36, 1);
-  will-change: transform;
-}
-    .message p {
+    .message-inner p {
       margin: 0 0 12px;
       line-height: 1.7;
-      text-align: left;
-      font-size: 15px;
     }
 
-    .message .name {
+    .name {
       text-align: right;
-      font-size: 14px;
-      margin-top: 8px;
+      font-size: 0.9em;
+      opacity: 0.85;
     }
   </style>
 </head>
@@ -131,80 +121,61 @@
       <span>𓊇</span>
     </h1>
 
-    <!-- メッセージカード -->
+    <!-- メッセージ 1 -->
     <div class="message">
       <div class="message-inner">
         <p>
           ここまで本当にお疲れさまでした。<br>
           それぞれの時間が、これからの糧になりますように。
         </p>
-        <div class="name">
-          〇〇より</div>
-      </div>
-    </div>
-    <div class="message">
-      <div class="message-inner">
-        <p>
-          ここまで本当にお疲れさまでした。<br>
-          それぞれの時間が、これからの糧になりますように。
-        </p>
-        <div class="name">　〇〇より</div>
-      </div>
-    </div>
-<div class="message">
-      <div class="message-inner">
-        <p>
-          ここまで本当にお疲れさまでした。<br>
-          それぞれの時間が、これからの糧になりますように。
-        </p>
-        <div class="name">　〇〇より</div>
-      </div>
-    </div>
-<div class="message">
-      <div class="message-inner">
-        <p>
-          ここまで本当にお疲れさまでした。<br>
-          それぞれの時間が、これからの糧になりますように。
-        </p>
-        <div class="name">　〇〇より</div>
-      </div>
-    </div>
-<div class="message">
-      <div class="message-inner">
-        <p>
-          ここまで本当にお疲れさまでした。<br>
-          それぞれの時間が、これからの糧になりますように。
-        </p>
-        <div class="name">　〇〇より</div>
-      </div>
-    </div>
-<div class="message">
-      <div class="message-inner">
-        <p>
-          ここまで本当にお疲れさまでした。<br>
-          それぞれの時間が、これからの糧になりますように。
-        </p>
-        <div class="name">　〇〇より</div>
-      </div>
-    </div>
-<div class="message">
-      <div class="message-inner">
-        <p>
-          ここまで本当にお疲れさまでした。<br>
-          それぞれの時間が、これからの糧になりますように。
-        </p>
-        <div class="name">　〇〇より</div>
+        <div class="name">〇〇より</div>
       </div>
     </div>
 
-
+    <!-- メッセージ 2 -->
     <div class="message">
       <div class="message-inner">
         <p>
           新しい道の先でも、<br>
           自分らしい歩幅を大切にしてください。
         </p>
-        <div class="name">　△△より</div>
+        <div class="name">△△より</div>
+      </div>
+    </div>
+
+    <!-- メッセージ 3 以降：サンプル -->
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
       </div>
     </div>
 
@@ -213,9 +184,7 @@
   <script>
     /* =========================
        スクロール時の微バウンス
-       A案（採用中）
-       ・重くならない
-       ・触感だけ足す
+       A案（軽量・採用中）
     ========================= */
     const inners = document.querySelectorAll(".message-inner");
 

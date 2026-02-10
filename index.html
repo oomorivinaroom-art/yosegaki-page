@@ -72,14 +72,16 @@
        メッセージカード
        ========================= */
 
-    .message {
-      max-width: 520px;
-      margin: 0 auto 20px;
-      padding: 16px 18px;
-      background: rgba(255, 255, 255, 0.6);
-      border-radius: 18px;
-      backdrop-filter: blur(6px);
+    ..message {
+  width: 100%;              /* ← 明示的に100% */
+  max-width: 520px;
+  margin: 0 auto 20px;
 
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 18px;
+  padding: 16px 18px;
+  backdrop-filter: blur(6px);
+}
       /* モニュっと＋バウンス用 */
       transition: transform 0.35s cubic-bezier(0.22, 1.6, 0.36, 1);
       will-change: transform;

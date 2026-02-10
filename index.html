@@ -1,19 +1,205 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>寄せ書き</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    /* =========================
+       基本設定
+       ========================= */
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family:
+        /* 教科書体っぽい順にフォールバック */
+        "YuKyokasho",
+        "游教科書",
+        "HG教科書体",
+        "Hiragino Kaku Gothic ProN",
+        "Noto Sans JP",
+        sans-serif;
+
+      /* 文字色：指定どおり真っ黒じゃない青 */
+      color: #001E43;
+
+      /* 背景ベースカラー */
+      background: #C0FFEE;
+
+      /* iPhoneでのスクロールを気持ちよく */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* =========================
+       レイアウト全体
+       ========================= */
+
+    .container {
+      width: 100%;
+      max-width: 600px; /* 画面が大きくても広がりすぎない */
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      position: relative;
+      z-index: 1; /* 背景canvasより前 */
+    }
+
+    /* =========================
+       見出し
+       ========================= */
+
+    h1 {
+      text-align: center;
+      font-size: 1.5rem; /* デフォより少し大きめ */
+      margin: 40px 0 32px;
+
+      /* うっすらドロップシャドウ */
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    /* =========================
+       メッセージカード
+       ========================= */
+
+    .message {
+      background: rgba(255, 255, 255, 0.6); /* 不透明度60% */
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+
+      /* ちょっと浮いてる感じ */
+      backdrop-filter: blur(6px);
+    }
+
+    .message-text {
+      font-family:
+        /* 本文は丸ゴシック寄り */
+        "Hiragino Maru Gothic ProN",
+        "Yu Gothic",
+        "Noto Sans JP",
+        sans-serif;
+
+      font-size: 1rem;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .from {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      text-align: right;
+      opacity: 0.9;
+    }
+
+    /* =========================
+       背景canvas
+       ========================= */
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none; /* タップ操作を邪魔しない */
+    }
+  </style>
 </head>
+
 <body>
-  <h1>寄せ書き</h1>
+  <!-- 背景アニメーション用 canvas -->
+  <canvas id="bg"></canvas>
 
-  <p>ここにメッセージが並びます。</p>
+  <div class="container">
+    <h1>ご卒業おめでとうございます</h1>
 
-  <ul>
-    <li>○○より</li>
-    <li>△△より</li>
-  </ul>
+    <!-- ▼ メッセージはこのブロックをコピペして増やす ▼ -->
+    <div class="message">
+      <div class="message-text">
+        これからの毎日が、やさしくて楽しい時間で満ちますように。
+      </div>
+      <div class="from">〇〇より</div>
+    </div>
 
+    <div class="message">
+      <div class="message-text">
+        新しい場所でも、あなたらしく進んでいけますように。
+      </div>
+      <div class="from">△△より</div>
+    </div>
+    <!-- ▲ ここまで ▲ -->
+
+  </div>
+
+  <script>
+    /* =====================================================
+       OPTION A：canvas版 背景ドットアニメ（有効）
+       iOSのダイナミック壁紙っぽく、ゆっくり下に流れる
+       ===================================================== */
+
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const colors = ["#FFE9D4", "#FFD4F0", "#D4FDFF"];
+    const dots = [];
+
+    const DOT_COUNT = 18; // ドットの数（増やすと賑やか）
+
+    for (let i = 0; i < DOT_COUNT; i++) {
+      dots.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 120 + Math.random() * 120,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speed: 0.15 + Math.random() * 0.25
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      dots.forEach(dot => {
+        ctx.beginPath();
+        ctx.fillStyle = dot.color;
+        ctx.globalAlpha = 0.6;
+        ctx.filter = "blur(40px)";
+        ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        dot.y += dot.speed;
+        if (dot.y - dot.r > canvas.height) {
+          dot.y = -dot.r;
+          dot.x = Math.random() * canvas.width;
+        }
+      });
+
+      ctx.globalAlpha = 1;
+      ctx.filter = "none";
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    /* =====================================================
+       OPTION B：CSS/div粒子版（無効・予備）
+       もしcanvasで事故ったら、上をコメントアウトして
+       こっちを使う想定
+       ===================================================== */
+
+    /*
+    // ここに div を生成して animation で流す処理を書く
+    // 今回は未使用（保険用）
+    */
+  </script>
 </body>
 </html>

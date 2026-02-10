@@ -14,7 +14,6 @@
       margin: 0;
       padding: 0;
       font-family:
-        /* 教科書体っぽい順にフォールバック */
         "YuKyokasho",
         "游教科書",
         "HG教科書体",
@@ -22,13 +21,9 @@
         "Noto Sans JP",
         sans-serif;
 
-      /* 文字色：指定どおり真っ黒じゃない青 */
       color: #001E43;
-
-      /* 背景ベースカラー */
       background: #C0FFEE;
 
-      /* iPhoneでのスクロールを気持ちよく */
       -webkit-overflow-scrolling: touch;
     }
 
@@ -38,11 +33,11 @@
 
     .container {
       width: 100%;
-      max-width: 600px; /* 画面が大きくても広がりすぎない */
+      max-width: 600px;
       margin: 0 auto;
-      padding: 24px 16px 40px;
+      padding: 24px 12px 40px;
       position: relative;
-      z-index: 1; /* 背景canvasより前 */
+      z-index: 1;
     }
 
     /* =========================
@@ -51,10 +46,8 @@
 
     h1 {
       text-align: center;
-      font-size: 1.5rem; /* デフォより少し大きめ */
+      font-size: 1.5rem;
       margin: 40px 0 32px;
-
-      /* うっすらドロップシャドウ */
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
 
@@ -63,18 +56,19 @@
        ========================= */
 
     .message {
-      background: rgba(255, 255, 255, 0.6); /* 不透明度60% */
+      /* ▼ カードを少し小さくして中央揃え ▼ */
+      max-width: 520px;
+      margin: 0 auto 20px;
+
+      background: rgba(255, 255, 255, 0.6);
       border-radius: 18px;
       padding: 16px 18px;
-      margin-bottom: 20px;
 
-      /* ちょっと浮いてる感じ */
       backdrop-filter: blur(6px);
     }
 
     .message-text {
       font-family:
-        /* 本文は丸ゴシック寄り */
         "Hiragino Maru Gothic ProN",
         "Yu Gothic",
         "Noto Sans JP",
@@ -83,6 +77,9 @@
       font-size: 1rem;
       line-height: 1.6;
       text-align: left;
+
+      /* 端ギリギリ感を防ぐ保険 */
+      word-break: break-word;
     }
 
     .from {
@@ -103,19 +100,42 @@
       width: 100vw;
       height: 100vh;
       z-index: 0;
-      pointer-events: none; /* タップ操作を邪魔しない */
+      pointer-events: none;
     }
   </style>
 </head>
 
 <body>
-  <!-- 背景アニメーション用 canvas -->
   <canvas id="bg"></canvas>
 
   <div class="container">
     <h1>ご卒業おめでとうございます</h1>
 
     <!-- ▼ メッセージはこのブロックをコピペして増やす ▼ -->
+    <div class="message">
+      <div class="message-text">
+        これからの毎日が、やさしくて楽しい時間で満ちますように。
+      </div>
+      <div class="from">〇〇より</div>
+    </div>
+    <div class="message">
+      <div class="message-text">
+        これからの毎日が、やさしくて楽しい時間で満ちますように。
+      </div>
+      <div class="from">〇〇より</div>
+    </div>
+    <div class="message">
+      <div class="message-text">
+        これからの毎日が、やさしくて楽しい時間で満ちますように。
+      </div>
+      <div class="from">〇〇より</div>
+    </div>
+    <div class="message">
+      <div class="message-text">
+        これからの毎日が、やさしくて楽しい時間で満ちますように。
+      </div>
+      <div class="from">〇〇より</div>
+    </div>
     <div class="message">
       <div class="message-text">
         これからの毎日が、やさしくて楽しい時間で満ちますように。
@@ -130,13 +150,15 @@
       <div class="from">△△より</div>
     </div>
     <!-- ▲ ここまで ▲ -->
-
   </div>
 
   <script>
     /* =====================================================
        OPTION A：canvas版 背景ドットアニメ（有効）
-       iOSのダイナミック壁紙っぽく、ゆっくり下に流れる
+       調整内容：
+       ・ドットを小さく
+       ・数を約2割減らす
+       ・輪郭をよりぼかす
        ===================================================== */
 
     const canvas = document.getElementById("bg");
@@ -152,15 +174,15 @@
     const colors = ["#FFE9D4", "#FFD4F0", "#D4FDFF"];
     const dots = [];
 
-    const DOT_COUNT = 18; // ドットの数（増やすと賑やか）
+    const DOT_COUNT = 14; // ← 18 → 約2割減
 
     for (let i = 0; i < DOT_COUNT; i++) {
       dots.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: 120 + Math.random() * 120,
+        r: 70 + Math.random() * 80, // ← 小さめ
         color: colors[Math.floor(Math.random() * colors.length)],
-        speed: 0.15 + Math.random() * 0.25
+        speed: 0.12 + Math.random() * 0.18
       });
     }
 
@@ -170,8 +192,11 @@
       dots.forEach(dot => {
         ctx.beginPath();
         ctx.fillStyle = dot.color;
-        ctx.globalAlpha = 0.6;
-        ctx.filter = "blur(40px)";
+        ctx.globalAlpha = 0.55;
+
+        /* ▼ ぼかしを強めて輪郭を消す ▼ */
+        ctx.filter = "blur(60px)";
+
         ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
         ctx.fill();
 
@@ -191,14 +216,11 @@
     draw();
 
     /* =====================================================
-       OPTION B：CSS/div粒子版（無効・予備）
-       もしcanvasで事故ったら、上をコメントアウトして
-       こっちを使う想定
+       OPTION B：CSS/div粒子版（予備・無効）
        ===================================================== */
 
     /*
-    // ここに div を生成して animation で流す処理を書く
-    // 今回は未使用（保険用）
+    // canvasが不安定だった場合用
     */
   </script>
 </body>

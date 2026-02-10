@@ -23,17 +23,7 @@
 
       color: #001E43;
       background: #C0FFEE;
-
       -webkit-overflow-scrolling: touch;
-      /* =========================
-   モニュっと＋バウンス用
-   ========================= */
-
-.message {
-  /* transformだけで動かす（軽量） */
-  transition: transform 0.35s cubic-bezier(0.22, 1.6, 0.36, 1);
-  will-change: transform;
-}
     }
 
     /* =========================
@@ -50,47 +40,49 @@
     }
 
     /* =========================
-       見出し
+       見出し（装飾つき）
        ========================= */
-.title {
-  text-align: center;
-  font-size: 1.5rem;
-  margin: 40px 0 32px;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
 
-/* 装飾記号（左右） */
-.title::before,
-.title::after {
-  font-family: inherit;
-  color: #F4A261; /* オレンジ系 */
-  opacity: 0.8;
-}
+    .title {
+      text-align: center;
+      font-size: 1.5rem;
+      margin: 40px 0 32px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
 
-.title::before {
-  content: "𓊆 ";
-  margin-right: 0.4em;
-}
+    .title::before,
+    .title::after {
+      content: "";
+      font-family: inherit;
+      color: #F4A261; /* オレンジ系 */
+      opacity: 0.8;
+    }
 
-.title::after {
-  content: " 𓊇";
-  margin-left: 0.4em;
-}
+    .title::before {
+      content: "𓊆 ";
+      margin-right: 0.4em;
+    }
+
+    .title::after {
+      content: " 𓊇";
+      margin-left: 0.4em;
+    }
 
     /* =========================
        メッセージカード
        ========================= */
 
     .message {
-      /* ▼ カードを少し小さくして中央揃え ▼ */
       max-width: 520px;
       margin: 0 auto 20px;
-
+      padding: 16px 18px;
       background: rgba(255, 255, 255, 0.6);
       border-radius: 18px;
-      padding: 16px 18px;
-
       backdrop-filter: blur(6px);
+
+      /* モニュっと＋バウンス用 */
+      transition: transform 0.35s cubic-bezier(0.22, 1.6, 0.36, 1);
+      will-change: transform;
     }
 
     .message-text {
@@ -103,8 +95,6 @@
       font-size: 1rem;
       line-height: 1.6;
       text-align: left;
-
-      /* 端ギリギリ感を防ぐ保険 */
       word-break: break-word;
     }
 
@@ -137,31 +127,6 @@
   <div class="container">
     <h1 class="title">ご卒業おめでとうございます</h1>
 
-    <!-- ▼ メッセージはこのブロックをコピペして増やす ▼ -->
-    <div class="message">
-      <div class="message-text">
-        これからの毎日が、やさしくて楽しい時間で満ちますように。
-      </div>
-      <div class="from">〇〇より</div>
-    </div>
-    <div class="message">
-      <div class="message-text">
-        これからの毎日が、やさしくて楽しい時間で満ちますように。
-      </div>
-      <div class="from">〇〇より</div>
-    </div>
-    <div class="message">
-      <div class="message-text">
-        これからの毎日が、やさしくて楽しい時間で満ちますように。
-      </div>
-      <div class="from">〇〇より</div>
-    </div>
-    <div class="message">
-      <div class="message-text">
-        これからの毎日が、やさしくて楽しい時間で満ちますように。
-      </div>
-      <div class="from">〇〇より</div>
-    </div>
     <div class="message">
       <div class="message-text">
         これからの毎日が、やさしくて楽しい時間で満ちますように。
@@ -175,16 +140,11 @@
       </div>
       <div class="from">△△より</div>
     </div>
-    <!-- ▲ ここまで ▲ -->
   </div>
 
   <script>
     /* =====================================================
-       OPTION A：canvas版 背景ドットアニメ（有効）
-       調整内容：
-       ・ドットを小さく
-       ・数を約2割減らす
-       ・輪郭をよりぼかす
+       背景ドットアニメ（canvas）
        ===================================================== */
 
     const canvas = document.getElementById("bg");
@@ -199,14 +159,13 @@
 
     const colors = ["#FFE9D4", "#FFD4F0", "#D4FDFF"];
     const dots = [];
-
-    const DOT_COUNT = 14; // ← 18 → 約2割減
+    const DOT_COUNT = 14;
 
     for (let i = 0; i < DOT_COUNT; i++) {
       dots.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: 70 + Math.random() * 80, // ← 小さめ
+        r: 70 + Math.random() * 80,
         color: colors[Math.floor(Math.random() * colors.length)],
         speed: 0.12 + Math.random() * 0.18
       });
@@ -219,10 +178,7 @@
         ctx.beginPath();
         ctx.fillStyle = dot.color;
         ctx.globalAlpha = 0.55;
-
-        /* ▼ ぼかしを強めて輪郭を消す ▼ */
         ctx.filter = "blur(60px)";
-
         ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
         ctx.fill();
 
@@ -235,47 +191,35 @@
 
       ctx.globalAlpha = 1;
       ctx.filter = "none";
-
       requestAnimationFrame(draw);
     }
 
     draw();
-    <script>
-  /* =========================
-     スクロール追従モニュ＋微バウンス
-     ========================= */
-
-  const messages = document.querySelectorAll(".message");
-  let lastScrollY = window.scrollY;
-
-  window.addEventListener("scroll", () => {
-    const currentScrollY = window.scrollY;
-    const delta = currentScrollY - lastScrollY;
-
-    messages.forEach((msg, i) => {
-      /* スクロール量に応じて少しだけ遅らせる */
-      const offset = Math.max(Math.min(delta * 0.15, 12), -12);
-
-      msg.style.transform = `translateY(${offset}px)`;
-    });
-
-    lastScrollY = currentScrollY;
-  });
-
-  window.addEventListener("scrollend", () => {
-    messages.forEach(msg => {
-      msg.style.transform = "translateY(0)";
-    });
-  });
-</script>
 
     /* =====================================================
-       OPTION B：CSS/div粒子版（予備・無効）
+       スクロール追従：モニュ＋微バウンス
        ===================================================== */
 
-    /*
-    // canvasが不安定だった場合用
-    */
+    const messages = document.querySelectorAll(".message");
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener("scroll", () => {
+      const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollY;
+
+      messages.forEach(msg => {
+        const offset = Math.max(Math.min(delta * 0.15, 12), -12);
+        msg.style.transform = `translateY(${offset}px)`;
+      });
+
+      lastScrollY = currentScrollY;
+    });
+
+    window.addEventListener("scrollend", () => {
+      messages.forEach(msg => {
+        msg.style.transform = "translateY(0)";
+      });
+    });
   </script>
 </body>
 </html>

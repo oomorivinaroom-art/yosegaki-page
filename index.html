@@ -19,27 +19,25 @@
                    "Noto Sans JP", sans-serif;
       color: #001E43;
       overflow-x: hidden;
+      background-color: #C0FFEE;
     }
 
     /* =========================
-       背景（春っぽいドット）
+       背景（春っぽいドット・ランダムサイズ）
     ========================= */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       z-index: -1;
-
-      background-color: #C0FFEE;
-
       background-image:
-        radial-gradient(circle at 40% 30%, rgba(255,233,212,0.7) 010px, transparent 8px),
-        radial-gradient(circle at 70% 30%, rgba(255,212,240,0.7) 0 6px, transparent 7px),
-        radial-gradient(circle at 40% 80%, rgba(212,253,255,0.7) 030px, transparent 10px);
-
+        radial-gradient(circle at 20% 30%, rgba(255,233,212,0.7) 8px, transparent 0),
+        radial-gradient(circle at 60% 50%, rgba(255,212,240,0.7) 5px, transparent 0),
+        radial-gradient(circle at 80% 80%, rgba(212,253,255,0.7) 12px, transparent 0),
+        radial-gradient(circle at 40% 10%, rgba(255,240,212,0.7) 3px, transparent 0),
+        radial-gradient(circle at 30% 70%, rgba(200,255,220,0.7) 10px, transparent 0);
       background-size: 220px 220px;
       filter: blur(1.5px);
-
       animation: bgMove 40s linear infinite;
     }
 
@@ -69,7 +67,7 @@
     }
 
     h1 span {
-      color: #FF9A3C; /* オレンジ系装飾 */
+      color: #FF9A3C;
       margin: 0 0.2em;
     }
 
@@ -88,13 +86,10 @@
       padding: 18px 20px;
       background: rgba(255,255,255,0.6);
       border-radius: 16px;
-
-      transition: transform 0.35s
-        cubic-bezier(0.22, 1.6, 0.36, 1); /* 微バウンス */
+      transition: transform 0.35s cubic-bezier(0.22, 1.6, 0.36, 1);
       will-change: transform;
     }
 
-    /* 1行目だけ上に余白を足す */
     .message-inner p:first-child {
       margin-top: 0.8em;
     }
@@ -184,21 +179,15 @@
   <script>
     /* =========================
        スクロール時の微バウンス
-       A案（軽量・採用中）
     ========================= */
     const inners = document.querySelectorAll(".message-inner");
 
     window.addEventListener("scroll", () => {
-      inners.forEach((el) => {
+      inners.forEach(el => {
         const rect = el.getBoundingClientRect();
         const offset = rect.top - window.innerHeight / 1.2;
-
-        if (offset < 0) {
-          const move = Math.max(offset * 0.03, -12);
-          el.style.transform = `translateY(${move}px)`;
-        } else {
-          el.style.transform = "translateY(0)";
-        }
+        const move = offset < 0 ? Math.max(offset * 0.03, -12) : 0;
+        el.style.transform = `translateY(${move}px)`;
       });
     });
   </script>

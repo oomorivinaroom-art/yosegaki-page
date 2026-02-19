@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>卒業メッセージ</title>
+
+  <style>
+    /* =========================
+       全体リセット
+    ========================= */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Hiragino Maru Gothic ProN", "ヒラギノ丸ゴ ProN",
+                   "Noto Sans JP", sans-serif;
+      color: #001E43;
+      overflow-x: hidden;
+      background-color: #C0FFEE; /* ベースカラー */
+    }
+
+    /* =========================
+       背景用キャンバス
+    ========================= */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      filter: blur(5px); /* ガウスぼかし */
+    }
+
+    /* =========================
+       レイアウトコンテナ
+    ========================= */
+    .container {
+      padding: 32px 16px 48px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* =========================
+       見出し
+    ========================= */
+    h1 {
+      text-align: center;
+      font-family: "游教科書体", "YuKyokasho", serif;
+      font-size: clamp(22px, 5vw, 32px);
+      margin-bottom: 32px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+word-break: keep-all;       /* 単語途中での改行を防ぐ */
+  white-space: nowrap;        /* 必要に応じて1行に収める */
+  letter-spacing: 0.02em;    /* 微調整で文字間を均す */
+    }
+
+    h1 span {
+      color: #FF9A3C; /* オレンジ系装飾 */
+      margin: 0 0.2em;
+    }
+
+    /* =========================
+       メッセージカード
+    ========================= */
+    .message {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .message-inner {
+      width: 100%;
+      max-width: 520px;
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 16px;
+      transition: transform 0.35s cubic-bezier(0.22, 1.6, 0.36, 1);
+      will-change: transform;
+    }
+
+    .message-inner p:first-child {
+      margin-top: 0.8em;
+    }
+
+    .message-inner p {
+      margin: 0 0 12px;
+      line-height: 1.7;
+    }
+
+    .name {
+      text-align: right;
+      font-size: 0.9em;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="bgDots"></canvas>
+
+  <div class="container">
+
+    <h1>
+      <span>𓊆</span>
+      ご卒業おめでとうございます
+      <span>𓊇</span>
+    </h1>
+
+    <!-- メッセージ 1 -->
+    <div class="message">
+      <div class="message-inner">
+        <p>
+          ここまで本当にお疲れさまでした。<br>
+          それぞれの時間が、これからの糧になりますように。
+        </p>
+        <div class="name">〇〇より</div>
+      </div>
+    </div>
+
+    <!-- メッセージ 2 -->
+    <div class="message">
+      <div class="message-inner">
+        <p>
+          新しい道の先でも、<br>
+          自分らしい歩幅を大切にしてください。
+        </p>
+        <div class="name">△△より</div>
+      </div>
+    </div>
+
+    <!-- メッセージ 3 以降：サンプル -->
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-inner">
+        <p>サンプル</p>
+        <div class="name">サンプルより</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* =========================
+       スクロール時の微バウンス
+    ========================= */
+    const inners = document.querySelectorAll(".message-inner");
+
+    window.addEventListener("scroll", () => {
+      inners.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const offset = rect.top - window.innerHeight / 1.2;
+        const move = offset < 0 ? Math.max(offset * 0.03, -12) : 0;
+        el.style.transform = `translateY(${move}px)`;
+      });
+    });
+
+    /* =========================
+       背景ドット（ランダム降下・指定色）
+    ========================= */
+    const canvas = document.getElementById('bgDots');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    const colors = ["#FFE9D4", "#FFD4F0", "#D4FDFF"];
+    const dots = [];
+    const dotCount = 80;
+
+    for(let i = 0; i < dotCount; i++){
+      dots.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: 5 + Math.random() * 15,
+        speed: 0.2 + Math.random() * 1,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      dots.forEach(dot => {
+        dot.y += dot.speed;
+        if(dot.y - dot.radius > height){
+          dot.y = -dot.radius;
+          dot.x = Math.random() * width;
+        }
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI*2);
+        ctx.fillStyle = dot.color;
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
